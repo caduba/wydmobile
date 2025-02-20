@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contagem Regressiva</title>
     <style>
+        /* Definindo a imagem de fundo para a página inteira */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -12,11 +13,15 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-image: url('https://i.imgur.com/iLzPbgC.png'); /* Coloque o caminho da sua imagem aqui */
+            background-size: cover; /* Faz a imagem cobrir toda a tela */
+            background-position: center; /* Alinha a imagem no centro da tela */
+            background-attachment: fixed; /* A imagem fica fixa enquanto rola a página */
         }
+
         .countdown-container {
             text-align: center;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.8); /* Cor de fundo semitransparente */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -35,36 +40,31 @@
 
     <div class="countdown-container">
         <div class="countdown" id="countdown"></div>
-        <div class="label">Contagem pro lançamento dessa merdaa</div>
+        <div class="label">Contagem regressiva para o lançamento do servidor do WYD Mobile GLOBAL East.</div>
     </div>
 
     <script>
         function updateCountdown() {
-            const targetDate = new Date("February 22, 2025 01:00:00 GMT-0300").getTime(); // Definir a data de destino
-            const now = new Date().getTime(); // Obter o tempo atual
+            const targetDate = new Date("February 22, 2025 01:00:00 GMT-0300").getTime();
+            const now = new Date().getTime();
 
-            // Calcular a diferença entre a data de destino e o tempo atual
             const distance = targetDate - now;
 
-            // Calcular dias, horas, minutos e segundos
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Exibir a contagem regressiva
             document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-            // Se a contagem regressiva acabar
             if (distance < 0) {
-                clearInterval(interval); // Parar a contagem
+                clearInterval(interval);
                 document.getElementById("countdown").innerHTML = "O tempo acabou!";
             }
         }
 
-        // Atualizar a contagem regressiva a cada segundo
         const interval = setInterval(updateCountdown, 1000);
-        updateCountdown(); // Chamar imediatamente para exibir a contagem ao carregar a página
+        updateCountdown();
     </script>
 
 </body>
