@@ -1,71 +1,127 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contagem Regressiva</title>
+    <title>WYD MOBILE BRASIL</title>
     <style>
-        /* Definindo a imagem de fundo para a página inteira */
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            background-image: url('https://i.imgur.com/iLzPbgC.png'); /* Coloque o caminho da sua imagem aqui */
-            background-size: cover; /* Faz a imagem cobrir toda a tela */
-            background-position: center; /* Alinha a imagem no centro da tela */
-            background-attachment: fixed; /* A imagem fica fixa enquanto rola a página */
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
-        .countdown-container {
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.8); /* Cor de fundo semitransparente */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        body {
+            background-image: url('https://s2-techtudo.glbimg.com/TX5slkWpHr60idvx7Lh9U-IcD8U=/0x0:996x478/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2019/v/x/AElEu9RSGfc0HSFoEzew/captura-de-tela-2019-05-23-as-14.52.06.png'); /* Substitua por sua imagem */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Faz a imagem ficar fixa ao rolar */
+            min-height: 100vh;
         }
-        .countdown {
-            font-size: 3em;
+
+        header {
+            background-color: rgba(51, 51, 51, 0.9); /* Fundo semi-transparente */
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            background-color: rgba(244, 244, 244, 0.9); /* Fundo semi-transparente */
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 1rem;
+            text-decoration: none;
             color: #333;
         }
-        .label {
-            font-size: 1.2em;
-            color: #555;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            background-color: rgba(255, 255, 255, 0.8); /* Fundo semi-transparente para legibilidade */
+            border-radius: 5px;
+        }
+
+        .news-card {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+        }
+
+        .news-card img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .sidebar {
+            background-color: rgba(249, 249, 249, 0.9);
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: rgba(51, 51, 51, 0.9);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .read-more {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            margin-top: 0.5rem;
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>WYD MOBILE BRASIL</h1>
+    </header>
 
-    <div class="countdown-container">
-        <div class="countdown" id="countdown"></div>
-        <div class="label">Contagem regressiva para o lançamento do servidor do WYD Mobile GLOBAL East.</div>
+    /*<nav>
+        <a href="">Seu portal de noticias da comunidade.</a>
+    </nav>*/
+
+    <div class="container">
+        <main>
+            <article class="news-card">
+                <h2>Lançamento!</h2>
+                <img src="https://i.imgur.com/gBpxe6J.png" alt="Imagem da notícia">
+                <p>Data: 22/02/2025</p>
+                <p>A Era do WYD Mobile Global COMEÇOU!</p>
+                <a href="lancamento.html" class="read-more">Leia mais</a>
+            </article>
+        </main>
+
+        <aside class="sidebar">
+            <h3>Últimas Notícias</h3>
+            <ul>
+                <li>	Anuncie Aqui!</li>
+                <li>	Anuncie Aqui!</li>
+                <li>	Anuncie Aqui!</li>
+            </ul>
+        </aside>
     </div>
 
-    <script>
-        function updateCountdown() {
-            const targetDate = new Date("February 22, 2025 01:00:00 GMT-0300").getTime();
-            const now = new Date().getTime();
-
-            const distance = targetDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-            if (distance < 0) {
-                clearInterval(interval);
-                document.getElementById("countdown").innerHTML = "O tempo acabou!";
-            }
-        }
-
-        const interval = setInterval(updateCountdown, 1000);
-        updateCountdown();
-    </script>
-
+    <footer>
+        <p>© 2025 WYD Mobile Brasil. Todos os direitos reservados.</p>
+    </footer>
 </body>
 </html>
