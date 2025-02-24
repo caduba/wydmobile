@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WYD MOBILE BRASIL</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="top-menu">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#noticias">Notícias</a></li>
+            <li><a href="#eventos">Eventos</a></li>
+            <li><a href="guias.html">Guias</a></li>
+            <li><a href="#comunidade">Comunidade</a></li>
+            <li><a href="#suporte">Suporte</a></li>
+        </ul>
+    </nav>
+
+    <div id="header-container"></div>
+
+    <div class="container">
+        <main>
+            <article class="news-card">
+                <h2>Lançamento!</h2>
+                <img src="https://i.imgur.com/gBpxe6J.png" alt="Imagem da notícia">
+                <p>Data: 22/02/2025</p>
+                <p>A Era do WYD Mobile Global COMEÇOU!</p>
+                <a href="lancamento.html" class="read-more">Leia mais</a>
+            </article>
+        </main>
+
+        <aside class="sidebar">
+            <h3>Transmissão Ao Vivo</h3>
+            <div id="live-stream"></div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>© 2025 WYD Mobile Brasil. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const apiKey = 'AIzaSyA-GIw5Z9GvkJPuyp6JXa6n1RK4wxfZhiE';
+        const channelId = 'UCZJ3Q-V7NRefWBeS3z7iw7A';
+
+        async function checkIfLive() {
+            try {
+                const response = await fetch(
+                    `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&type=video&eventType=live&key=${apiKey}`
+                );
+                const data = await response.json();
+
+                const liveStreamContainer = document.getElementById('live-stream');
+
+                if (data.items && data.items.length > 0) {
+                    const videoId = data.items[0].id.videoId;
+                    liveStreamContainer.innerHTML = `
+                        <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                    `;
+                } else {
+                    liveStreamContainer.innerHTML = '';
+                }
+            } catch (error) {
+                console.error('Erro ao verificar transmissão ao vivo:', error);
+                document.getElementById('live-stream').innerHTML = '';
+            }
+        }
+
+        checkIfLive();
+    </script>
+	<script src="template.js"></script>
+</body>
+</html>
