@@ -11,7 +11,7 @@
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="#noticias">Notícias</a></li>
-            <li><a href="#eventos">Eventos</a></li>
+            <li><a href="march-event.html">Eventos</a></li>
             <li><a href="guias.html">Guias</a></li>
             <li><a href="#comunidade">Comunidade</a></li>
             <li><a href="#suporte">Suporte</a></li>
@@ -22,6 +22,13 @@
 
     <div class="container">
         <main>
+            <article class="news-card">
+                <h2>Evento de Março</h2>
+                <img src="https://i.imgur.com/t2kBPpE.png" alt="Imagem da notícia">
+                <p>Data: 04/03/2025</p>
+                <p>O evento do mês de março foi divulgado.</p>
+                <a href="march-event.html" class="read-more">Leia mais</a>
+            </article>
             <article class="news-card">
                 <h2>Lançamento!</h2>
                 <img src="https://i.imgur.com/gBpxe6J.png" alt="Imagem da notícia">
@@ -57,8 +64,8 @@
                 if (data.items && data.items.length > 0) {
                     const videoId = data.items[0].id.videoId;
                     liveStreamContainer.innerHTML = `
-                        <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-                    `;
+                            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                        `;
                 } else {
                     liveStreamContainer.innerHTML = '';
                 }
@@ -70,6 +77,6 @@
 
         checkIfLive();
     </script>
-	<script src="template.js"></script>
+    <script src="template.js"></script>
 </body>
 </html>
