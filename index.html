@@ -229,13 +229,22 @@
         <ul class="queue" id="queue6"></ul>
       </div>
     </div>
+	
+	<!-- Item 7 -->
+    <div class="item-card">
+      <img src="https://i.imgur.com/Jik7e09.png" alt="Item 7">
+      <div class="item-info">
+        <h3>Ultimate War Soul</h3>
+        <ul class="queue" id="queue7"></ul>
+      </div>
+    </div>
 
   </div>
 
   <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-content">
-      <h3>Entrar na Fila</h3>
+      <h3>Join Queue</h3>
 
       <label>Nick</label>
       <input type="text" id="nick">
@@ -246,8 +255,9 @@
         <option value="2">Flame of Condor</option>
         <option value="3">Feather of Condor</option>
         <option value="4">Awakening Jewel</option>
-        <option value="5">Crystal of Chaos</option>
+        <option value="5">Crysta l of Chaos</option>
         <option value="6">Jewel of Creation</option>
+		<option value="7">Warsoul fragment</option>
       </select>
 
       <div class="modal-buttons">
@@ -302,7 +312,7 @@
 
     function listenQueues() {
 
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= 7; i++) {
 
         const ref = db.ref("queues/item" + i);
 
@@ -339,4 +349,3 @@
 
 </body>
 </html>
-
