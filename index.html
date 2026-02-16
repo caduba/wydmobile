@@ -72,7 +72,7 @@ body{
   align-items:flex-start;
 }
 
-/* IMAGEM CORRETA */
+/* Imagem fixa */
 .item-card img{
   width:90px;
   height:90px;
@@ -188,13 +188,13 @@ body{
 <!-- Barra superior -->
 <div class="top-bar">
 
-  <button class="btn-add" onclick="openModal()">
-    Join Queue
-  </button>
+<button class="btn-add" onclick="openModal()">
+Join Queue
+</button>
 
-  <button class="btn-add" id="adminBtn">
-    Admin Mode
-  </button>
+<button class="btn-add" id="adminBtn">
+Admin Mode
+</button>
 
 </div>
 
@@ -202,67 +202,19 @@ body{
 <!-- Conteúdo -->
 <div class="container">
 
-<div class="item-card">
-<img src="https://i.imgur.com/DYOzqgO.png">
-<div class="item-info">
-<h3>Archangel Weapon Chest</h3>
-<ul class="queue" id="queue1"></ul>
-</div>
-</div>
-
-<div class="item-card">
-<img src="https://i.imgur.com/J33pboh.png">
-<div class="item-info">
-<h3>Flame of Condor</h3>
-<ul class="queue" id="queue2"></ul>
-</div>
-</div>
-
-<div class="item-card">
-<img src="https://i.imgur.com/IuOPsM8.png">
-<div class="item-info">
-<h3>Feather of Condor</h3>
-<ul class="queue" id="queue3"></ul>
-</div>
-</div>
-
-<div class="item-card">
-<img src="https://i.imgur.com/aKfcUo4.png">
-<div class="item-info">
-<h3>Awakening Jewel</h3>
-<ul class="queue" id="queue4"></ul>
-</div>
-</div>
-
-<div class="item-card">
-<img src="https://i.imgur.com/SExCYGi.png">
-<div class="item-info">
-<h3>Crystal of Chaos</h3>
-<ul class="queue" id="queue5"></ul>
-</div>
-</div>
-
-<div class="item-card">
-<img src="https://i.imgur.com/EfOrY5K.png">
-<div class="item-info">
-<h3>Jewel of Creation</h3>
-<ul class="queue" id="queue6"></ul>
-</div>
-</div>
-
-<div class="item-card">
-<img src="https://i.imgur.com/Jik7e09.png">
-<div class="item-info">
-<h3>Ultimate War Soul</h3>
-<ul class="queue" id="queue7"></ul>
-</div>
-</div>
+<div class="item-card"><img src="https://i.imgur.com/DYOzqgO.png"><div class="item-info"><h3>Archangel Weapon Chest</h3><ul class="queue" id="queue1"></ul></div></div>
+<div class="item-card"><img src="https://i.imgur.com/J33pboh.png"><div class="item-info"><h3>Flame of Condor</h3><ul class="queue" id="queue2"></ul></div></div>
+<div class="item-card"><img src="https://i.imgur.com/IuOPsM8.png"><div class="item-info"><h3>Feather of Condor</h3><ul class="queue" id="queue3"></ul></div></div>
+<div class="item-card"><img src="https://i.imgur.com/aKfcUo4.png"><div class="item-info"><h3>Awakening Jewel</h3><ul class="queue" id="queue4"></ul></div></div>
+<div class="item-card"><img src="https://i.imgur.com/SExCYGi.png"><div class="item-info"><h3>Crystal of Chaos</h3><ul class="queue" id="queue5"></ul></div></div>
+<div class="item-card"><img src="https://i.imgur.com/EfOrY5K.png"><div class="item-info"><h3>Jewel of Creation</h3><ul class="queue" id="queue6"></ul></div></div>
+<div class="item-card"><img src="https://i.imgur.com/Jik7e09.png"><div class="item-info"><h3>Ultimate War Soul</h3><ul class="queue" id="queue7"></ul></div></div>
 
 </div>
 
 
-<!-- Modal -->
-<div class="modal" id="modal">
+<!-- Modal ADD -->
+<div class="modal" id="modalAdd">
 
 <div class="modal-content">
 
@@ -272,18 +224,32 @@ body{
 <input id="nick">
 
 <label>Item</label>
-
 <select id="item"></select>
 
 <div class="modal-buttons">
 
-<button class="btn-confirm" onclick="addPlayer()">
-Confirm
-</button>
+<button class="btn-confirm" onclick="addPlayer()">Confirm</button>
+<button class="btn-cancel" onclick="closeModal()">Cancel</button>
 
-<button class="btn-cancel" onclick="closeModal()">
-Cancel
-</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- Modal REMOVE -->
+<div class="modal" id="modalRemove">
+
+<div class="modal-content">
+
+<h3>Remove Player</h3>
+
+<p id="removeText" style="text-align:center;margin-bottom:20px;"></p>
+
+<div class="modal-buttons">
+
+<button class="btn-confirm" onclick="confirmRemove()">Confirm</button>
+<button class="btn-cancel" onclick="closeRemove()">Cancel</button>
 
 </div>
 
@@ -295,10 +261,9 @@ Cancel
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-
 <script>
 
-/* CONFIG FIREBASE */
+/* FIREBASE */
 
 const firebaseConfig = {
 apiKey:"AIzaSyA1XKYKTrRilVClsyqqBWJzTFdBIGe5o10",
@@ -330,26 +295,29 @@ const items = [
 
 /* ADMIN */
 
-let isAdmin = false;
+let isAdmin=false;
+
+let removeItem=null;
+let removeKey=null;
+let removeNick=null;
 
 
-/* ATIVA ADMIN PELO LINK */
+/* ADMIN LINK */
 
 document.addEventListener("DOMContentLoaded",()=>{
 
-const params = new URLSearchParams(window.location.search);
+const params=new URLSearchParams(window.location.search);
 
 if(params.get("admin")==="nem26"){
 
 document.getElementById("adminBtn").style.display="inline-block";
-
-isAdmin = true;
+isAdmin=true;
 
 alert("Modo Admin Ativado");
 
 }
 
-const sel = document.getElementById("item");
+const sel=document.getElementById("item");
 
 items.forEach((it,i)=>{
 sel.innerHTML+=`<option value="${i+1}">${it[0]}</option>`;
@@ -358,14 +326,14 @@ sel.innerHTML+=`<option value="${i+1}">${it[0]}</option>`;
 });
 
 
-/* MODAL */
+/* MODAL ADD */
 
 function openModal(){
-document.getElementById("modal").style.display="flex";
+document.getElementById("modalAdd").style.display="flex";
 }
 
 function closeModal(){
-document.getElementById("modal").style.display="none";
+document.getElementById("modalAdd").style.display="none";
 document.getElementById("nick").value="";
 }
 
@@ -382,26 +350,38 @@ if(!nick) return alert("Digite o nick");
 db.ref("queues/item"+item).push(nick);
 
 closeModal();
-
 }
 
 
-/* REMOVE */
+/* REMOVE MODAL */
 
-function removePlayer(item,key,nick){
+function openRemove(item,key,nick){
 
 if(!isAdmin) return;
 
-if(confirm("Remover "+nick+"?")){
+removeItem=item;
+removeKey=key;
+removeNick=nick;
 
-db.ref("queues/item"+item+"/"+key).remove();
+document.getElementById("removeText").innerText=
+"Remove player:\n"+nick+" ?";
 
+document.getElementById("modalRemove").style.display="flex";
 }
 
+function closeRemove(){
+document.getElementById("modalRemove").style.display="none";
+}
+
+function confirmRemove(){
+
+db.ref("queues/item"+removeItem+"/"+removeKey).remove();
+
+closeRemove();
 }
 
 
-/* LISTEN */
+/* LISTENER */
 
 function listenQueues(){
 
@@ -436,7 +416,7 @@ li.innerHTML=
 if(isAdmin){
 
 li.onclick=()=>{
-removePlayer(i,key,data[key]);
+openRemove(i,key,data[key]);
 };
 
 }
