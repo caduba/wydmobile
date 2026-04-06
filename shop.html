@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Nemesis</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  font-family:Arial,Helvetica,sans-serif;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:#0f172a;
+  color:#e5e7eb;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.top-bar{
+  width:100%;
+  padding:20px;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  background:#020617;
+  border-bottom:1px solid #1e293b;
+}
+
+.btn-add{
+  background:#38bdf8;
+  color:#020617;
+  border:none;
+  padding:12px 25px;
+  font-size:16px;
+  font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.btn-queue{
+  background:#ef4444;
+  color:#ffffff;
+}
+
+.container{
+  max-width:960px;
+  width:100%;
+  margin-top:40px;
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,220px));
+  justify-content:center;
+  gap:20px;
+}
+
+.item-card{
+  background:#020617;
+  border:1px solid #1e293b;
+  border-radius:14px;
+  padding:20px;
+  min-height:180px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+.item-content{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:14px;
+}
+
+.item-thumb{
+  width:88px;
+  height:88px;
+  object-fit:cover;
+  border-radius:12px;
+  border:2px solid #38bdf8;
+  background:#020b20;
+  padding:4px;
+}
+
+.item-info{
+  width:100%;
+}
+
+.item-info h3{
+  color:#38bdf8;
+  margin-bottom:14px;
+  line-height:1.35;
+  font-size:18px;
+}
+
+.ad-meta{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:flex-start;
+}
+
+.ad-meta p{
+  background:#020b20;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:8px 10px;
+  font-size:14px;
+  display:inline-block;
+  width:auto;
+  max-width:100%;
+}
+
+.shop-note{
+  width:100%;
+  max-width:640px;
+  margin-top:28px;
+  padding:14px 18px;
+  text-align:center;
+  border:1px solid #7f1d1d;
+  border-radius:12px;
+  background:#2b0a0a;
+  color:#fecaca;
+  font-size:14px;
+}
+
+.empty-state{
+  width:100%;
+  max-width:640px;
+  margin-top:40px;
+  padding:24px;
+  text-align:center;
+  border:1px solid #1e293b;
+  border-radius:14px;
+  background:#020617;
+  color:#94a3b8;
+}
+
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+
+.modal-content{
+  background:#020617;
+  border:1px solid #1e293b;
+  border-radius:12px;
+  padding:30px;
+  width:90%;
+  max-width:420px;
+}
+
+.modal-content h3{
+  text-align:center;
+  margin-bottom:20px;
+  color:#38bdf8;
+}
+
+.modal-content label{
+  display:block;
+  margin-bottom:6px;
+}
+
+.modal-content input,
+.modal-content select{
+  width:100%;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  margin-bottom:12px;
+}
+
+.modal-content select:disabled{
+  background:#cbd5e1;
+  color:#64748b;
+  cursor:not-allowed;
+}
+
+.modal-buttons{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.btn-confirm{
+  background:#22c55e;
+  border:none;
+  padding:8px 16px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn-cancel{
+  background:#ef4444;
+  border:none;
+  padding:8px 16px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+<button class="btn-add btn-queue" onclick="window.location.href='index.html'">Queue</button>
+<button class="btn-add" onclick="openRegisterModal()">Register</button>
+</div>
+
+<div class="shop-note">Ignore item icons. Verify the tier in the item name.</div>
+
+<div class="container" id="adsContainer"></div>
+<div class="empty-state" id="emptyState">No registered items yet.</div>
+
+<div class="modal" id="registerModal">
+<div class="modal-content">
+
+<h3>Register Item</h3>
+
+<label for="sellerNick">Nick</label>
+<input id="sellerNick" placeholder="Digite seu nick">
+
+<label for="playerClass">Class</label>
+<select id="playerClass">
+  <option value="">Select a class</option>
+  <option value="Mage">Mage</option>
+  <option value="Knight">Knight</option>
+  <option value="Elf">Elf</option>
+  <option value="Emperor">Emperor</option>
+</select>
+
+<label for="itemSelect">Item</label>
+<select id="itemSelect" disabled>
+  <option value="">Select a class first</option>
+</select>
+
+<label for="typeSelect">Type</label>
+<select id="typeSelect" disabled>
+  <option value="">Select a class first</option>
+  <option value="[ENE]">[ENE]</option>
+  <option value="[AGI]">[AGI]</option>
+</select>
+
+<label for="tierSelect">Tier</label>
+<select id="tierSelect">
+  <option value="">Select a tier</option>
+  <option value="T4">[T4]</option>
+  <option value="T5">[T5]</option>
+  <option value="T6">[T6]</option>
+</select>
+
+<label for="priceSelect">Price</label>
+<select id="priceSelect">
+  <option value="">Select a price</option>
+  <option value="Bid(2000)">Bid(2000)</option>
+  <option value="Full(6000)">Full(6000)</option>
+</select>
+
+<div class="modal-buttons">
+<button class="btn-confirm" id="registerBtn" onclick="registerAd()">Confirm</button>
+<button class="btn-cancel" onclick="closeRegisterModal()">Cancel</button>
+</div>
+
+</div>
+</div>
+
+<div class="modal" id="modalRemove">
+<div class="modal-content">
+
+<h3>Remove Ad</h3>
+
+<p id="removeText" style="text-align:center;margin-bottom:20px;"></p>
+
+<div class="modal-buttons">
+<button class="btn-confirm" onclick="confirmRemove()">Confirm</button>
+<button class="btn-cancel" onclick="closeRemove()">Cancel</button>
+</div>
+
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+apiKey:"AIzaSyA1XKYKTrRilVClsyqqBWJzTFdBIGe5o10",
+authDomain:"queue-nemesis.firebaseapp.com",
+databaseURL:"https://queue-nemesis-default-rtdb.firebaseio.com",
+projectId:"queue-nemesis",
+storageBucket:"queue-nemesis.firebasestorage.app",
+messagingSenderId:"609915442047",
+appId:"1:609915442047:web:ce5678f84aa3d135ea404a"
+};
+
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+}
+
+const db = firebase.database();
+
+const classItems = {
+  Mage:[
+    "Staff Master",
+    "Shield Master",
+    "Helmet Master",
+    "Armor Master",
+    "Pants Master",
+    "Gloves Master",
+    "Boots Master"
+  ],
+  Knight:[
+    "Sword Master",
+    "Helmet Master",
+    "Armor Master",
+    "Pants Master",
+    "Gloves Master",
+    "Boots Master"
+  ],
+  Elf:[
+    "Crossbow Master",
+    "Quiver Master",
+    "Helmet Master",
+    "Armor Master",
+    "Pants Master",
+    "Gloves Master",
+    "Boots Master"
+  ],
+  Emperor:[
+    "Sceptre Master",
+    "Lawbook Master",
+    "Helmet Master",
+    "Armor Master",
+    "Pants Master",
+    "Gloves Master",
+    "Boots Master"
+  ]
+};
+
+const itemImages = {
+  Mage:{
+    "Staff Master":"https://i.imgur.com/A5IAJ31.png",
+    "Shield Master":"https://i.imgur.com/8k4c3sm.png",
+    "Helmet Master":"https://i.imgur.com/2O1M6Uu.png",
+    "Armor Master":"https://i.imgur.com/KTCCOxy.png",
+    "Pants Master":"https://i.imgur.com/moYNYrb.png",
+    "Gloves Master":"https://i.imgur.com/DpuvVDt.png",
+    "Boots Master":"https://i.imgur.com/Hd6qgy7.png"
+  },
+  Knight:{
+    "Sword Master":"https://i.imgur.com/wlveLlV.png",
+    "Helmet Master":"https://i.imgur.com/LT4jbep.png",
+    "Armor Master":"https://i.imgur.com/EMRy68V.png",
+    "Pants Master":"https://i.imgur.com/Xwx3DvJ.png",
+    "Gloves Master":"https://i.imgur.com/ArhZrax.png",
+    "Boots Master":"https://i.imgur.com/TjMvrcw.png"
+  },
+  Elf:{
+    "Crossbow Master":"https://i.imgur.com/W3T1eW2.png",
+    "Quiver Master":"https://i.imgur.com/NqY5Pgi.png",
+    "Helmet Master":"https://i.imgur.com/9VL0Ce1.png",
+    "Armor Master":"https://i.imgur.com/ZjgTleQ.png",
+    "Pants Master":"https://i.imgur.com/qlOQEtG.png",
+    "Gloves Master":"https://i.imgur.com/MhS3F36.png",
+    "Boots Master":"https://i.imgur.com/wHD7089.png"
+  },
+  Emperor:{
+    "Sceptre Master":"https://i.imgur.com/6xAhdhx.png",
+    "Lawbook Master":"https://i.imgur.com/1BuM4d7.png",
+    "Helmet Master":"https://i.imgur.com/g0VB7Wx.png",
+    "Armor Master":"https://i.imgur.com/W9mcZzi.png",
+    "Pants Master":"https://i.imgur.com/rPOjHrF.png",
+    "Gloves Master":"https://i.imgur.com/Pyuh3vr.png",
+    "Boots Master":"https://i.imgur.com/Fav2H7o.png"
+  }
+};
+
+const classColors = {
+  Mage:"#7c3aed",
+  Knight:"#dc2626",
+  Elf:"#16a34a",
+  Emperor:"#d97706"
+};
+
+const classTypes = {
+  Mage:["[ENE]","[AGI]"],
+  Knight:["[ENE]","[FOR]"],
+  Elf:["[ENE]","[AGI]"],
+  Emperor:["[ENE]","[FOR]"]
+};
+
+let isAdmin=false;
+let removeAdKey=null;
+let removeAdTitle="";
+
+const playerClass=document.getElementById("playerClass");
+const itemSelect=document.getElementById("itemSelect");
+const typeSelect=document.getElementById("typeSelect");
+const adsContainer=document.getElementById("adsContainer");
+const emptyState=document.getElementById("emptyState");
+const registerBtn=document.getElementById("registerBtn");
+
+playerClass.addEventListener("change",updateItemsByClass);
+
+document.addEventListener("DOMContentLoaded",()=>{
+  const params=new URLSearchParams(window.location.search);
+
+  if(params.get("admin")==="nem26"){
+    isAdmin=true;
+    alert("Modo Admin Ativado");
+  }
+});
+
+function updateItemsByClass(){
+  const selectedClass=playerClass.value;
+  itemSelect.innerHTML="";
+  typeSelect.innerHTML="";
+
+  if(!selectedClass){
+    itemSelect.disabled=true;
+    itemSelect.innerHTML="<option value=''>Select a class first</option>";
+    typeSelect.disabled=true;
+    typeSelect.innerHTML="<option value=''>Select a class first</option>";
+    return;
+  }
+
+  itemSelect.disabled=false;
+  itemSelect.innerHTML="<option value=''>Select an item</option>";
+  typeSelect.disabled=false;
+  typeSelect.innerHTML="<option value=''>Select a type</option>";
+
+  classItems[selectedClass].forEach(item=>{
+    itemSelect.innerHTML+=`<option value="${item}">${item}</option>`;
+  });
+
+  classTypes[selectedClass].forEach(type=>{
+    typeSelect.innerHTML+=`<option value="${type}">${type}</option>`;
+  });
+}
+
+function openRegisterModal(){
+  document.getElementById("registerModal").style.display="flex";
+}
+
+function closeRegisterModal(){
+  document.getElementById("registerModal").style.display="none";
+  document.getElementById("sellerNick").value="";
+  document.getElementById("playerClass").value="";
+  document.getElementById("tierSelect").value="";
+  document.getElementById("priceSelect").value="";
+  itemSelect.disabled=true;
+  itemSelect.innerHTML="<option value=''>Select a class first</option>";
+  typeSelect.disabled=true;
+  typeSelect.innerHTML="<option value=''>Select a class first</option>";
+}
+
+function openRemove(adKey,adTitle){
+  if(!isAdmin) return;
+
+  removeAdKey=adKey;
+  removeAdTitle=adTitle;
+
+  document.getElementById("removeText").innerText=
+  "Remove ad:\n"+adTitle+" ?";
+
+  document.getElementById("modalRemove").style.display="flex";
+}
+
+function closeRemove(){
+  document.getElementById("modalRemove").style.display="none";
+}
+
+async function confirmRemove(){
+  if(!removeAdKey) return;
+
+  try{
+    await db.ref("shopAds/"+removeAdKey).remove();
+    closeRemove();
+  }catch(error){
+    console.error("Erro ao remover anuncio:",error);
+    alert("Erro ao remover anuncio: "+(error && error.message ? error.message : "falha desconhecida"));
+  }
+}
+
+async function registerAd(){
+  const nick=document.getElementById("sellerNick").value.trim();
+  const selectedClass=playerClass.value;
+  const item=itemSelect.value;
+  const type=typeSelect.value;
+  const tier=document.getElementById("tierSelect").value;
+  const price=document.getElementById("priceSelect").value;
+
+  if(!nick) return alert("Digite o nick");
+  if(!selectedClass) return alert("Selecione a class");
+  if(!item) return alert("Selecione o item");
+  if(!type) return alert("Selecione o type");
+  if(!tier) return alert("Selecione o tier");
+  if(!price) return alert("Selecione o price");
+
+  registerBtn.disabled=true;
+  registerBtn.textContent="Saving...";
+
+  try{
+    await db.ref("shopAds").push({
+      nick,
+      playerClass:selectedClass,
+      item,
+      type,
+      tier,
+      price,
+      createdAt:Date.now()
+    });
+
+    closeRegisterModal();
+  }catch(error){
+  }finally{
+    registerBtn.disabled=false;
+    registerBtn.textContent="Confirm";
+  }
+}
+
+function getItemImage(ad){
+  const mappedImage = itemImages[ad.playerClass] && itemImages[ad.playerClass][ad.item];
+
+  if(mappedImage){
+    return mappedImage;
+  }
+
+  return buildFallbackImage(ad);
+}
+
+function buildFallbackImage(ad){
+  const accent = classColors[ad.playerClass] || "#38bdf8";
+  const initials = ad.item
+    .split(" ")
+    .filter(Boolean)
+    .slice(0,2)
+    .map(word=>word[0])
+    .join("")
+    .toUpperCase();
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+      <rect width="120" height="120" rx="18" fill="#020617"/>
+      <rect x="8" y="8" width="104" height="104" rx="14" fill="${accent}" opacity="0.18"/>
+      <circle cx="60" cy="44" r="20" fill="${accent}" opacity="0.85"/>
+      <text x="60" y="92" text-anchor="middle" font-size="22" font-family="Arial" font-weight="700" fill="#e5e7eb">${initials}</text>
+    </svg>
+  `;
+
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+}
+
+function renderAds(data){
+  adsContainer.innerHTML="";
+
+  if(!data){
+    emptyState.style.display="block";
+    return;
+  }
+
+  emptyState.style.display="none";
+
+  const ads=Object.entries(data).reverse();
+
+  ads.forEach(([key,ad])=>{
+    const card=document.createElement("div");
+    card.className="item-card";
+    card.innerHTML=`
+      <div class="item-content">
+        <img class="item-thumb" src="${getItemImage(ad)}" alt="${ad.item}">
+        <div class="item-info">
+          <h3>${ad.type} ${ad.item} ${ad.tier}</h3>
+          <div class="ad-meta">
+            <p>Seller: ${ad.nick}</p>
+            <p>Price: ${ad.price}</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    if(isAdmin){
+      card.style.cursor="pointer";
+      card.onclick=()=>{
+        openRemove(key,`${ad.type} ${ad.item} ${ad.tier}`);
+      };
+    }
+
+    adsContainer.appendChild(card);
+  });
+}
+
+db.ref("shopAds").on(
+  "value",
+  snap=>{
+    renderAds(snap.val());
+  },
+  error=>{
+    emptyState.style.display="block";
+    emptyState.textContent="No registered items yet.";
+  }
+);
+
+</script>
+
+</body>
+</html>
